@@ -75,10 +75,14 @@ def sum_of_parts(schematic):
                 is_partnum = False
                 symbol_position = tuple()
             
-    print(adjacent)
-    return part_sum   
+    for star in adjacent:
+        if len(adjacent[star]) != 2:
+            continue
+        gear_ratio_sum += adjacent[star][0] * adjacent[star][1]
+
+    return part_sum, gear_ratio_sum
 
 
-with open ("3. Gear Ratios\sampleinput.txt") as input:
+with open ("3. Gear Ratios\input.txt") as input:
     schematic = input.readlines()
     print(sum_of_parts(schematic))
