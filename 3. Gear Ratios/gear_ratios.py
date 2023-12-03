@@ -15,12 +15,14 @@ class Gear_Ratios:
 
     def inspect_cell(self, x, y):
         '''
-        Set part num as True
+        Check if symbol
+        If symbol => the current number can be a part num
         If symbol = '*' => the current number can be a gear part
         '''
-        self.is_partnum = True
-        if self.schematic[x][y] == '*':
-            self.symbol_position = (x, y)
+        if self.is_symbol(x, y):
+            self.is_partnum = True
+            if self.schematic[x][y] == '*':
+                self.symbol_position = (x, y)
 
     def is_symbol(self, x, y):
         '''
@@ -40,48 +42,32 @@ class Gear_Ratios:
         #Checking the schematic index by index
         for x in range(row_limit):
             for y in range(col_limit):
+                #Check if it is a digit
                 if self.schematic[x][y].isdigit():
                     self.current_num = self.current_num * 10 + int(self.schematic[x][y])
                     #Check if it can be a part num
                     if not self.is_partnum:
                         # print(self.current_num)
                         #Check all adjacent cells for a symbol
-                        #Top left
-                        if (x != 0) and (y != 0) and self.is_symbol(x - 1, y - 1): self.inspect_cell(x - 1, y - 1)
-                                
-                        #Top
-                        elif (x != 0) and self.is_symbol(x - 1, y): self.inspect_cell(x - 1, y)
-                                
-                        #Top right
-                        elif (x != 0) and (y != col_limit - 1) and self.is_symbol(x - 1, y + 1): self.inspect_cell(x - 1, y + 1)
-                                
-                        #Left
-                        elif (y != 0) and self.is_symbol(x, y - 1): self.inspect_cell(x, y - 1)
-                                
-                        #Right
-                        elif (y != col_limit - 1) and self.is_symbol(x, y + 1): self.inspect_cell(x, y + 1)
-                            
-                        #Bottom left
-                        elif (x != row_limit - 1) and (y != 0) and self.is_symbol(x + 1, y - 1): self.inspect_cell(x + 1, y - 1)
-                        
-                        #Bottom
-                        elif (x != row_limit - 1) and self.is_symbol(x + 1, y): self.inspect_cell(x + 1, y)
-                    
-                        #Bottom right
-                        elif (x != row_limit - 1) and (y != col_limit - 1) and self.is_symbol(x + 1, y + 1): self.inspect_cell(x + 1, y + 1)
-                        
+                        neighbours = [[-1,-1], [-1,0], [-1,1],
+                                      [0,-1], [0, 1],
+                                      [1,-1], [1,0], [1,1]]
+                        for dx, dy in neighbours:
+                            if self.is_partnum: break
+                            try: self.inspect_cell(x + dx, y + dy)
+                            except: pass       
                 
-                #Check if it is the last digit
-                if (y < row_limit - 1 and not self.schematic[x][y + 1].isdigit()) or (y == row_limit - 1):
-                    #Check if it can be added to part sum
-                    if self.is_partnum: 
-                        self.part_sum += self.current_num
-                        if self.symbol_position: self.adjacent[self.symbol_position].append(self.current_num)
+                    #Check if it is the last digit
+                    if (y < col_limit - 1 and not self.schematic[x][y + 1].isdigit()) or (y == col_limit - 1):
+                        #Check if it can be added to part sum
+                        if self.is_partnum: 
+                            self.part_sum += self.current_num
+                            if self.symbol_position: self.adjacent[self.symbol_position].append(self.current_num)
 
-                    #Reset variables
-                    self.current_num = 0
-                    self.is_partnum = False
-                    self.symbol_position = tuple()
+                        #Reset variables
+                        self.current_num = 0
+                        self.is_partnum = False
+                        self.symbol_position = tuple()
                 
         for star in self.adjacent:
             if len(self.adjacent[star]) != 2:
