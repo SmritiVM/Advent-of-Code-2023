@@ -1,88 +1,97 @@
 from collections import defaultdict
-#Find gear ratio => find a partnum and find another part_num before x + 1 or y + 1
-def sum_of_parts(schematic):
-    part_sum = 0
-    gear_ratio_sum = 0
-    row_limit, col_limit = len(schematic), len(schematic[0]) - 1
-    current_num, is_partnum = 0, False
-    adjacent = defaultdict(lambda: [])
-    symbol_position = tuple()
-    for x in range(row_limit):
-        for y in range(col_limit):
-            if schematic[x][y].isdigit():
-                current_num = current_num * 10 + int(schematic[x][y])
-                #Check if it can be added to part sum
-                if not is_partnum:
-                    #Check all adjacent cells for a symbol
-                    #Top left
-                    if (x != 0) and (y != 0) and (not schematic[x - 1][y - 1].isalnum() and schematic[x - 1][y - 1] != '.'):
-                        is_partnum = True
-                        if schematic[x - 1][y - 1] == '*':
-                            symbol_position = (x - 1, y - 1)
+
+class Gear_Ratios:
+    def __init__(self, schematic):
+        self.schematic = schematic
+
+        #Part 1 Variables
+        self.part_sum = 0
+        self.current_num, self.is_partnum = 0, False
+
+        #Part 2 Variables
+        self.gear_ratio_sum = 0
+        self.adjacent = defaultdict(lambda: []) #{<pos of '*'>:[<adjacent part nums>]}
+        self.symbol_position = tuple()
+
+    def inspect_cell(self, x, y):
+        '''
+        Set part num as True
+        If symbol = '*' => the current number can be a gear part
+        '''
+        self.is_partnum = True
+        if self.schematic[x][y] == '*':
+            self.symbol_position = (x, y)
+
+    def is_symbol(self, x, y):
+        '''
+        Character that is not alphanumeric or '.' is a symbol
+        '''
+        return not self.schematic[x][y].isalnum() and self.schematic[x][y] != '.'
+    
+    def compute_sums(self):
+        '''
+        Returning answers for
+        Part 1: Finding sum of parts
+        Part 2: Finding sum of gear rations
+        '''
+        #Iteration limits
+        row_limit, col_limit = len(schematic), len(schematic[0]) - 1
+        
+        #Checking the schematic index by index
+        for x in range(row_limit):
+            for y in range(col_limit):
+                if self.schematic[x][y].isdigit():
+                    self.current_num = self.current_num * 10 + int(self.schematic[x][y])
+                    #Check if it can be a part num
+                    if not self.is_partnum:
+                        # print(self.current_num)
+                        #Check all adjacent cells for a symbol
+                        #Top left
+                        if (x != 0) and (y != 0) and self.is_symbol(x - 1, y - 1): self.inspect_cell(x - 1, y - 1)
+                                
+                        #Top
+                        elif (x != 0) and self.is_symbol(x - 1, y): self.inspect_cell(x - 1, y)
+                                
+                        #Top right
+                        elif (x != 0) and (y != col_limit - 1) and self.is_symbol(x - 1, y + 1): self.inspect_cell(x - 1, y + 1)
+                                
+                        #Left
+                        elif (y != 0) and self.is_symbol(x, y - 1): self.inspect_cell(x, y - 1)
+                                
+                        #Right
+                        elif (y != col_limit - 1) and self.is_symbol(x, y + 1): self.inspect_cell(x, y + 1)
                             
-                    #Top
-                    elif (x != 0) and (not schematic[x - 1][y].isalnum() and schematic[x - 1][y] != '.'):
-                        is_partnum = True
-                        if schematic[x - 1][y] == '*':
-                            symbol_position = (x - 1, y)
-                            
-                    #Top right
-                    elif (x != 0) and (y != col_limit - 1) and (not schematic[x - 1][y + 1].isalnum() and schematic[x - 1][y + 1] != '.'):
-                        is_partnum = True
-                        if schematic[x - 1][y + 1] == '*':
-                            symbol_position = (x - 1, y + 1)
-                            
-                    #Left
-                    elif (y != 0) and (not schematic[x][y - 1].isalnum() and schematic[x][y - 1] != '.'):
-                        is_partnum = True
-                        if schematic[x][y - 1] == '*':
-                            symbol_position = (x, y - 1)
-                            
-                    #Right
-                    elif (y != col_limit - 1) and (not schematic[x][y + 1].isalnum() and schematic[x][y + 1] != '.'):
-                        is_partnum = True
-                        if schematic[x][y + 1] == '*':
-                            symbol_position = (x, y + 1)
+                        #Bottom left
+                        elif (x != row_limit - 1) and (y != 0) and self.is_symbol(x + 1, y - 1): self.inspect_cell(x + 1, y - 1)
                         
-                    #Bottom left
-                    elif (x != row_limit - 1) and (y != 0) and (not schematic[x + 1][y - 1].isalnum() and schematic[x + 1][y - 1] != '.'):
-                        is_partnum = True
-                        if schematic[x + 1][y - 1] == '*':
-                            symbol_position = (x + 1, y - 1)
+                        #Bottom
+                        elif (x != row_limit - 1) and self.is_symbol(x + 1, y): self.inspect_cell(x + 1, y)
                     
-                    #Bottom
-                    elif (x != row_limit - 1) and (not schematic[x + 1][y].isalnum() and schematic[x + 1][y] != '.'):
-                        is_partnum = True
-                        if schematic[x + 1][y] == '*':
-                            symbol_position = (x + 1, y)
+                        #Bottom right
+                        elif (x != row_limit - 1) and (y != col_limit - 1) and self.is_symbol(x + 1, y + 1): self.inspect_cell(x + 1, y + 1)
+                        
                 
-                    #Bottom right
-                    elif (x != row_limit - 1) and (y != col_limit - 1) and (not schematic[x + 1][y + 1].isalnum() and schematic[x + 1][y + 1] != '.'):
-                        is_partnum = True
-                        if schematic[x + 1][y + 1] == '*':
-                            symbol_position = (x + 1, y + 1)
-                    
-            
-            #Check if it is the last digit
-            if (y < row_limit - 1 and not schematic[x][y + 1].isdigit()) or (y == row_limit - 1):
-                #Check if it can be added to part sum
-                if is_partnum: 
-                    part_sum += current_num
-                    if symbol_position: adjacent[symbol_position].append(current_num)
+                #Check if it is the last digit
+                if (y < row_limit - 1 and not self.schematic[x][y + 1].isdigit()) or (y == row_limit - 1):
+                    #Check if it can be added to part sum
+                    if self.is_partnum: 
+                        self.part_sum += self.current_num
+                        if self.symbol_position: self.adjacent[self.symbol_position].append(self.current_num)
 
-                #Reset variables
-                current_num = 0
-                is_partnum = False
-                symbol_position = tuple()
-            
-    for star in adjacent:
-        if len(adjacent[star]) != 2:
-            continue
-        gear_ratio_sum += adjacent[star][0] * adjacent[star][1]
+                    #Reset variables
+                    self.current_num = 0
+                    self.is_partnum = False
+                    self.symbol_position = tuple()
+                
+        for star in self.adjacent:
+            if len(self.adjacent[star]) != 2:
+                continue
+            self.gear_ratio_sum += self.adjacent[star][0] * self.adjacent[star][1]
 
-    return part_sum, gear_ratio_sum
+        return self.part_sum, self.gear_ratio_sum
 
 
 with open ("3. Gear Ratios\input.txt") as input:
     schematic = input.readlines()
-    print(sum_of_parts(schematic))
+    puzzle = Gear_Ratios(schematic)
+    print(puzzle.compute_sums())
