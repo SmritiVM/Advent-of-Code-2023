@@ -12,14 +12,14 @@ def parse_input(file):
 def sum_of_wins(Cards):
     total_points = 0
     for card_number in Cards:
-        matches = count_matches(card_number, Cards)
+        matches = count_matches(Cards[card_number]) #send Cards[card_number]
         if matches:
             total_points += 2 ** (matches - 1)
     return total_points
 
-def count_matches(card_number, Cards):
+def count_matches(card_details):
     matches = 0
-    winning, having = Cards[card_number][:2]
+    winning, having = card_details[:2]
     for win in winning:
         if win in having:
             matches += 1
