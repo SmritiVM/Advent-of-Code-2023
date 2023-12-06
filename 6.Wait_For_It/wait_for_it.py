@@ -1,10 +1,10 @@
 import re
-def get_puzzle(path, discrete = True):
+def get_puzzle(path, discrete=True):
     with open(path) as file:
         sheet = file.read().split('\n')
         return parse_input(sheet, discrete)
 
-def parse_input(sheet, discrete = True):
+def parse_input(sheet, discrete=True):
     time_array = re.findall("\d+", sheet[0])
     distance_array = re.findall("\d+", sheet[1])
     if discrete:
