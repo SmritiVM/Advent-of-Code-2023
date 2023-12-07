@@ -1,6 +1,5 @@
 from functools import cmp_to_key
 from collections import Counter
-import re
 
 include_joker = False
 
@@ -51,8 +50,9 @@ def get_type(hand):
         else:
             most_common, count = frequency.most_common(1)[0] #[(<entry1>:<frequency1>)]
             frequency[most_common] += joker_count
-
-    entries = len(frequency)
+    
+  
+    entries = len(frequency) #no of distinct entries
     if entries == 1: return "5kind"
     if entries == 2:
         if 4 in frequency.values(): return "4kind"
