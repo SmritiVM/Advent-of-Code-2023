@@ -1,5 +1,5 @@
 from functools import cmp_to_key
-from collections import defaultdict
+from collections import Counter
 import re
 
 def get_puzzle(path):
@@ -36,34 +36,17 @@ def compare_power(card1, card2):
         return 1 if POWER[type1] > POWER[type2] else -1
 
 def get_type(hand):
-    frequency = defaultdict(lambda: 0)
-    for char in hand:
-        frequency[char] += 1
-    if len(frequency) == 1:
-        return "5kind"
-    if len(frequency) == 2:
-        if 4 in frequency.values():
-            return "4kind"
-        else:
-            return "fullhouse"
-    if len(frequency) == 3:
-        if 3 in frequency.values():
-            return "3kind"
-        else:
-            return "2pair"
-    if len(frequency) == 4:
-        return "1pair"
+    frequency = Counter(hand)
+    entries = len(frequency)
+    if entries == 1: return "5kind"
+    if entries == 2:
+        if 4 in frequency.values(): return "4kind"
+        else: return "fullhouse"
+    if entries == 3:
+        if 3 in frequency.values(): return "3kind"
+        else: return "2pair"
+    if entries == 4: return "1pair"
     return "high"  
-    # if re.match(r'(\w)\1{4,}', hand):
-    #     print("5kind", hand)
-    # if re.match(r'.*(\w).*\1.*\1.*\1', hand):
-    #     print("4kind", hand)
-    # three_pos = re.match(r'.*(\w).*\1.*\1', hand)
-    # if three_pos:
-    #     print(three_pos)
-    #     if re.match(r'(\w).*\1', hand[:three_pos.start()] + hand[three_pos.end() + 1:]):
-    #         print("fullhouse", hand)
-
 
 def compare_strength(hand1, hand2):
     VALUE = {"A":14, "K":13, "Q":12, "J":11, "T":10, "9":9, "8":8, "7":7, "6":6, "5":5, "4":4, "3":3, "2":2}
