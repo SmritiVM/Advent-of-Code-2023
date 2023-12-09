@@ -8,7 +8,7 @@ def parse_input(input):
         HISTORY.append(list(map(int, line.split())))
     return HISTORY
 
-def extrapolated_value_sum(HISTORY):
+def get_extrapolated_sum(HISTORY):
     total_forward = total_backward = 0
     for history in HISTORY:
         extrapolated_values = get_extrapolated_value(history)
@@ -29,7 +29,6 @@ def get_extrapolated_value(history):
     
     #Reverse iteration
     extrapolated_forward = extrapolated_backward = 0
-    sequences.pop()
     while sequences:
         current_sequence = sequences.pop()
         first_value, last_value = current_sequence[0], current_sequence[-1]
@@ -38,5 +37,5 @@ def get_extrapolated_value(history):
 
 path = "9.Mirage_Maintenance\input.txt"
 HISTORY = get_puzzle(path)
-print(extrapolated_value_sum(HISTORY))
+print(get_extrapolated_sum(HISTORY))
 
