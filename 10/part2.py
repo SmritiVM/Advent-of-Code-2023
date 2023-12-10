@@ -5,7 +5,7 @@ def get_puzzle(path):
         return parse_input(file)
     
 def parse_input(file):
-    MAZE = [line.strip() for line in file]
+    MAZE = [list(line.strip()) for line in file]
 
     #Pipes and their permissible neighbours
     '''
@@ -36,21 +36,47 @@ def parse_input(file):
             if v == start:
                 adjacent_start.add(u)
     adjacent[start] = adjacent_start
+    return MAZE, adjacent, start
 
-    return adjacent, start
-
-def get_farthest_distance(adjacent, start):
-    distance = defaultdict(lambda: float('INF'))
-    queue = deque([(start, 0)])
-    while queue:
-        node, current_distance = queue.popleft()
-        distance[node] = current_distance
+def get_biggest_loop(MAZE, adjacent, start):
+    stack = deque([(start, None)])
+    previous = {}
+    while stack:
+        node, prev = stack.pop()
         for vertex in adjacent[node]:
-            if distance[vertex] > current_distance:
-                queue.append((vertex, current_distance + 1))
+            if vertex == prev: continue
+            previous[vertex] = node
+            stack.append((vertex, node))
+        if node == start and prev is not None: break
+
+    #Getting path of traversal
+    path = [start]
+    while True:
+        vertex = previous[path[-1]]
+        if vertex == start: break
+        path.append(vertex)
+    print(path)
+    return path
+
+def get_farthest_distance(path):
+    return len(path)//2
     
-    return max(distance.values())
-    
+def find_enclosed_tiles(path):
+    #Shoelace formula and picks theorem
+    area = 0
+    for a,b in zip(path, path[1:]+ [path[0]]):
+        #Finding determinant and adding to area
+        # https://en.wikipedia.org/wiki/Shoelace_formula
+        area +=  (a[0]*b[1] - a[1]*b[0])
+    # https://en.wikipedia.org/wiki/Pick's_theorem
+    return abs(area//2 + len(path)//2 - 1)
+
 path = "10\input.txt"
-ADJACENT, START = get_puzzle(path)
-print(get_farthest_distance(ADJACENT, START))
+MAZE, ADJACENT, START = get_puzzle(path)
+path = get_biggest_loop(MAZE, ADJACENT, START)
+
+#Part 1
+print(get_farthest_distance(path))
+
+#Part 2
+print(find_enclosed_tiles(path))
