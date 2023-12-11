@@ -8,40 +8,27 @@ def parse_input(file):
     matrix = []
     for line in file:
         matrix.append(list(line.strip('\n')))
-    print(len(matrix), len(matrix[0]))
-    
-    # Replace all empty rows and columns
-    # Replace rows
-    expand_rows(matrix)
-    #Transpose matrix to replace columns
+      
+    # Get all empty row and column indices
+    # Get rows
+    empty_rows = get_empty_rows(matrix)
+
+    #Transpose matrix to get empty columns
     transpose = get_transpose(matrix)
-    expand_rows(transpose)
-    #Get back original matrix
-    matrix = get_transpose(transpose)
-    
-    # print(*matrix, sep = '\n')
-    # print(len(matrix), len(matrix[0]))
+    empty_columns = get_empty_rows(transpose)
 
     #Replace all galaxies with numbers and get their coordinates
     galaxies = find_galaxies(matrix)
-    return matrix, galaxies
+    return galaxies, empty_rows, empty_columns
 
-def expand_rows(matrix):
+def get_empty_rows(matrix):
     # Get poisitions of empty rows
-    empty_rows = deque([])
+    empty_rows = []
     for index, row in enumerate(matrix):
         if '#' not in row:
             empty_rows.append(index)
-    #Replace empty rows
-    while empty_rows:
-        index = empty_rows.popleft()
-        matrix.insert(index + 1, matrix[index])
-        #Modifying remaining indices
-        for i in range(len(empty_rows)):
-            empty_rows[i] += 1
+    return empty_rows
 
-    # print(*matrix, sep = '\n')
-    # print(len(matrix), len(matrix[0]))
 
 def get_transpose(matrix):
     transpose = [[0 for x in range(len(matrix))] for y in range(len(matrix[0]))]
@@ -61,21 +48,45 @@ def find_galaxies(matrix):
                 galaxy_number += 1
     return galaxies
 
-def sum_of_lengths(MATRIX, GALAXIES):
+def sum_of_lengths(GALAXIES, EMPTY_ROWS, EMPTY_COLS, expansion=1):
     total = 0
     galaxy_count = len(GALAXIES)
     for galaxy1 in range(1, galaxy_count + 1):
         for galaxy2 in range(galaxy1 + 1, galaxy_count + 1):
-            total += find_distance(galaxy1, galaxy2, GALAXIES)
+            total += find_distance(galaxy1, galaxy2, GALAXIES, EMPTY_ROWS, EMPTY_COLS, expansion)
     return total
 
-def find_distance(galaxy1, galaxy2, GALAXIES):
+
+
+def find_distance(galaxy1, galaxy2, GALAXIES, EMPTY_ROWS, EMPTY_COLS, expansion):
     x1, y1 = GALAXIES[galaxy1]
     x2, y2 = GALAXIES[galaxy2]
-    return abs(x1 - x2) + abs(y1 - y2)
 
-path = "11\input.txt"
-MATRIX, GALAXIES = get_puzzle(path)
-# print(*MATRIX, sep = '\n')
-# print(GALAXIES)
-print(sum_of_lengths(MATRIX, GALAXIES))
+    # Setting x1 and y1 as min coordinates
+    if x1 > x2: x1, x2 = x2, x1
+    if y1 > y2: y1, y2 = y2, y1
+    x_diff, y_diff = x2 - x1, y2 - y1
+
+    # Check if empty row in between rows
+    for row in EMPTY_ROWS:
+        if x1 < row < x2:
+            x_diff += expansion
+    
+    
+    # Check if empty column in between columns
+    for column in EMPTY_COLS:
+        if y1 < column < y2:
+            y_diff += expansion
+
+    return x_diff + y_diff
+    
+    
+
+path = "11.Cosmic_Expansion\input.txt"
+GALAXIES, EMPTY_ROWS, EMPTY_COLS = get_puzzle(path)
+
+#Part 1
+print(sum_of_lengths(GALAXIES, EMPTY_ROWS, EMPTY_COLS))
+
+#Part 2
+print(sum_of_lengths(GALAXIES, EMPTY_ROWS, EMPTY_COLS, expansion=1000000-1))
