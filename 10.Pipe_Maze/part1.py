@@ -51,6 +51,6 @@ def get_farthest_distance(adjacent, start):
     
     return max(distance.values())
     
-path = "10\input.txt"
+path = "10.Pipe_Maze\input.txt"
 ADJACENT, START = get_puzzle(path)
 print(get_farthest_distance(ADJACENT, START))

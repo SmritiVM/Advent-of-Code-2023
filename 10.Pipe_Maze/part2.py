@@ -71,7 +71,7 @@ def find_enclosed_tiles(path):
     # https://en.wikipedia.org/wiki/Pick's_theorem
     return abs(area//2 + len(path)//2 - 1)
 
-path = "10\input.txt"
+path = "10.Pipe_Maze\input.txt"
 MAZE, ADJACENT, START = get_puzzle(path)
 path = get_biggest_loop(MAZE, ADJACENT, START)
 
