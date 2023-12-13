@@ -17,7 +17,7 @@ def summarize_notes(PATTERNS):
     for pattern in PATTERNS:
         direction, lines = find_lor(pattern)
         if direction == "V": vertical += lines
-        else: horizontal += lines
+        elif direction == "H": horizontal += lines
     return vertical + 100 * horizontal
 
 def find_lor(pattern):
@@ -36,6 +36,7 @@ def find_lor(pattern):
         for i in range(rows):
             line += pattern[i][j]
         transpose.append(line)
+    # transpose = list(zip(*pattern)) #Alt method
     return "V", check_lor_exists(transpose, columns)
 
 def check_lor_exists(pattern, length):
@@ -49,13 +50,23 @@ def check_lor_exists(pattern, length):
             above, below = pattern[lor_pos:lor_pos - lines_below:-1], pattern[lor_pos + 1:]
         if above == below:
             return lor_pos + 1
+        
+        # Alt method
+        # matched_lines = 0
+        # for line1, line2 in zip(pattern[lor_pos::-1], pattern[lor_pos + 1:]):
+        #     if line1 == line2: matched_lines += 1
+        #     else: break
+        # if matched_lines == min(lines_above, lines_below):
+        #     return lor_pos + 1
+
         lor_pos += 1
     return 0
 
 
-path = "13\input.txt"
+path = "13.Point_of_Incidence\input.txt"
 PATTERNS = get_puzzle(path)
 print(summarize_notes(PATTERNS))
+
 
 
 
