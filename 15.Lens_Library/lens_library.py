@@ -13,25 +13,26 @@ def sum_of_hash_values(SEQUENCE):
 def get_hash_value(sequence):
     current_value = 0
     for char in sequence:
-        ascii_value = ord(char)
-        current_value += ascii_value
-        current_value *= 17
-        current_value %= 256
+        current_value = ((current_value + ord(char)) * 17) % 256
+        # ascii_value = ord(char)
+        # current_value += ascii_value
+        # current_value *= 17
+        # current_value %= 256
     return current_value
 
 def total_focusing_power(SEQUENCE):
-    # Get hashmap {<Box no>:[[<label> <focal length>], ...]}
+    # Get hashmap {<Box no>:{<label>: <focal length>,...}, ...}
     BOXES = generate_boxmap(SEQUENCE)
     
     # Generate hashmap {<label>:(<box no>, <slot no>, <focal length>)}
     LENS = generate_lensmap(BOXES)
 
     #Find focusing power
-    total_power = 0
+    focusing_power = 0
     for lens in LENS:
         box_no, slot, focal_length = LENS[lens]
-        total_power += (box_no + 1) * slot * focal_length
-    return total_power
+        focusing_power += (box_no + 1) * slot * focal_length
+    return focusing_power
 
 def generate_boxmap(SEQUENCE):
     boxes = defaultdict(dict)
