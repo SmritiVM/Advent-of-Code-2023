@@ -5,25 +5,18 @@ def get_puzzle(path):
 def get_max_energized(CONTRAPTION):
     rows, columns = len(CONTRAPTION), len(CONTRAPTION[0])
     max_energized = 0
-    #Check 1st row
-    for j in range(columns):
-        if j == 0: max_energized = max(max_energized, get_total_energized(CONTRAPTION, (0, j, '>')))
-        elif j == columns - 1: max_energized = max(max_energized, get_total_energized(CONTRAPTION, (0, j, '<')))
-        max_energized = max(max_energized, get_total_energized(CONTRAPTION, (0, j, 'v')))
+    # traversal = {row:{<index>:<direction>, }, column: {<index>:<direction>}}
+    traversal = {'row':{0:'v', rows - 1:'^'}, 'column':{0:'>', columns - 1:'<'}}
+    #Check rows
+    for i in traversal['row']:
+        for j in range(columns):
+            # if j in traversal['column']: max_energized = max(max_energized, get_total_energized(CONTRAPTION, (i, j, traversal['column'][j])))
+            max_energized = max(max_energized, get_total_energized(CONTRAPTION, (i, j, traversal['row'][i])))
 
-    #Check last row
-    for j in range(columns):
-        if j == 0: max_energized = max(max_energized, get_total_energized(CONTRAPTION, (rows - 1, j, '>')))
-        elif j == columns - 1: max_energized = max(max_energized, get_total_energized(CONTRAPTION, (rows - 1, j, '<')))
-        max_energized = max(max_energized, get_total_energized(CONTRAPTION, (0, j, '^')))
-
-    #Check 1st column
-    for i in range(1, rows - 1): #corners already checked in rows
-        max_energized = max(max_energized, get_total_energized(CONTRAPTION, (i, 0, '>')))
-
-    #Check last column
-    for i in range(1, rows - 1): #corners already checked in rows
-        max_energized = max(max_energized, get_total_energized(CONTRAPTION, (i, columns - 1, '<')))
+    #Check columns
+    for j in traversal['column']:
+        for i in range(rows): 
+            max_energized = max(max_energized, get_total_energized(CONTRAPTION, (i, j, traversal['column'][j])))
     
     return max_energized
 
@@ -50,10 +43,6 @@ def get_next(node, CONTRAPTION):
     DIRECTIONS = {'>':(0, 1), '<':(0, -1), '^':(-1, 0), 'v':(1, 0)}
     row_offset, col_offset = DIRECTIONS[direction]
     return i + row_offset, j + col_offset
-
-def is_valid_coordinate(point: tuple, rows: int, columns: int):
-    i, j = point
-    return not any([i < 0, i >= rows, j < 0, j >= columns])
 
 def check_next(next: tuple, direction: str, CONTRAPTION: list, stack: list, visited: set, energized: set):
     rows, columns = len(CONTRAPTION), len(CONTRAPTION[0])
@@ -82,6 +71,10 @@ def check_next(next: tuple, direction: str, CONTRAPTION: list, stack: list, visi
         if is_valid_coordinate(next[:-1], rows, columns) and not is_visited(visited, next): 
             stack.append(next)
             visited.add(next)
+
+def is_valid_coordinate(point: tuple, rows: int, columns: int):
+    i, j = point
+    return not any([i < 0, i >= rows, j < 0, j >= columns])
 
 def is_visited(visited, next):
     return next in visited
