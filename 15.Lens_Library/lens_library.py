@@ -21,7 +21,7 @@ def get_hash_value(sequence):
     return current_value
 
 def total_focusing_power(SEQUENCE):
-    # Get hashmap {<Box no>:{<label>: <focal length>,...}, ...}
+    # Get hashmap {<Box no>:{<label1>: <focal length1>,<label2>: <focal length2>...}, ...}
     BOXES = generate_boxmap(SEQUENCE)
     
     # Generate hashmap {<label>:(<box no>, <slot no>, <focal length>)}
