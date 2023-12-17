@@ -15,25 +15,20 @@ def find_minimum_heat_loss(MAP, min_moves, max_moves):
     
     while heap:
         heat_loss, city = heappop(heap)
+        
         if city in heat_losses: continue
         heat_losses[city] = heat_loss
 
-        # if (city[0], city[1]) == end and city[3] >= min_moves:
-        #     return heat_loss
+        x, y, direction, moves = city
+        if (x, y) == end and moves >= min_moves:
+            return heat_loss
+
         neighbours = find_neighbours(city, min_moves, max_moves)
 
         for neighbour in neighbours:
             if neighbour not in heat_losses or new_heat_loss < heat_losses[city]:
                 new_heat_loss = heat_loss + MAP[neighbour[0]][neighbour[1]]
                 heappush(heap, (new_heat_loss, neighbour))
-        
-    min_heat_loss = float('INF')
-    for city, heat_loss in heat_losses.items():
-        x, y, direction, moves = city
-        if (x, y) == end and moves >= min_moves:
-            min_heat_loss = min(min_heat_loss, heat_loss)
-    return min_heat_loss
-
 
 def find_neighbours(city, min_moves, max_moves):
     x, y, direction, moves = city

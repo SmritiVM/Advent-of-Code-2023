@@ -6,12 +6,12 @@ def get_puzzle(path):
     
 def find_minimum_heat_loss(MAP):
     heap = [(0, 0, 0, '>', '<', 0), (0, 0, 0, 'v', '<', 0)] #heat loss so far, x, y, prev_dir, invalid_dir, moves
-    visited = set() #(x, y, direction)
+    visited = set() #(x, y, direction, moves)
     cumulative_heat_loss = {}
     while heap:
         city = heappop(heap)
         heat_loss, x, y, prev_dir, invalid_dir, moves = city
-        if (x, y) == (rows - 1, columns - 1) and moves >= 1: #dest reached
+        if (x, y) == (rows - 1, columns - 1): #dest reached
             return heat_loss
         if (x, y, prev_dir, moves) in visited: continue
         visited.add((x, y, prev_dir, moves))
@@ -26,7 +26,7 @@ def find_minimum_heat_loss(MAP):
 
 
 def find_neighbours(city):
-    heat_loss, x, y, prev_dir, invalid_dir, moves = city
+    x, y, prev_dir, invalid_dir, moves = city[1:]
     neighbours = []
     for direction in DIRECTIONS:
         dx, dy = DIRECTIONS[direction]
