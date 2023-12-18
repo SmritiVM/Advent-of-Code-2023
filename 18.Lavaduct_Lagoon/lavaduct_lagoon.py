@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 DIRECTIONS = {'R':(0, 1), 'L':(0, -1), 'U':(-1, 0), 'D':(1, 0)}
 CODE = {0:'R', 1:'D', 2:'L', 3:'U'}
 
@@ -30,8 +28,6 @@ def find_lava_area(PLAN):
     interior_points = abs(area) // 2 - perimeter//2 + 1
     return interior_points + perimeter
  
-path = "18.Lavaduct_Lagoon\sampleinput.txt"
-
 def find_boundary(PLAN):
     boundary = [(0, 0)]
     prev = (0, 0)
@@ -39,12 +35,14 @@ def find_boundary(PLAN):
         direction, distance = instruction[0], int(instruction[1])
         while distance > 0:
             x, y = prev
-            dx, dy= DIRECTIONS[direction]
+            dx, dy = DIRECTIONS[direction]
             next = (x + dx, y + dy)
             boundary.append(next)
             prev = next
             distance -= 1
     return boundary[:-1] #starting position also gets added to boundary so exculding that
+
+path = "18.Lavaduct_Lagoon\input.txt"
 
 #Part 1
 PLAN = get_puzzle(path)
