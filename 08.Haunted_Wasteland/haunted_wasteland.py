@@ -47,7 +47,7 @@ def find_steps(node, INSTRUCTIONS, NODES, END=[], dest_fixed=True):
     return steps
 
 
-path = "8.Haunted_Wasteland\input.txt"
+path = "08.Haunted_Wasteland\input.txt"
 INSTRUCTIONS, NODES, START, END = get_puzzle(path)
 
 #Part1

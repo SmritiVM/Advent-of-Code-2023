@@ -39,7 +39,7 @@ def find_distance(ms, time):
     return distance_travelled
 
 
-path = "6.Wait_For_It\input.txt"
+path = "06.Wait_For_It\input.txt"
 
 #Part 1
 TIME, DISTANCE = get_puzzle(path)

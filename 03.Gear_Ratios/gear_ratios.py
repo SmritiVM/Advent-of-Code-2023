@@ -77,7 +77,7 @@ class Gear_Ratios:
         return self.part_sum, self.gear_ratio_sum
 
 
-with open ("3. Gear Ratios\input.txt") as input:
+with open ("03.Gear_Ratios\input.txt") as input:
     schematic = input.readlines()
     puzzle = Gear_Ratios(schematic)
     print(puzzle.compute_sums())

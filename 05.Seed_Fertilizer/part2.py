@@ -71,7 +71,7 @@ def convert_source(map_index, MAPS, remain):
     return result
 
 
-with open("5.Fertilizer\input.txt") as file:
+with open("05.Fertilizer\input.txt") as file:
     SEEDS, MAPS = parse_almanac(file.read().split('\n'))
     print(find_min_location(SEEDS, MAPS))
     # puzzle = Solution()

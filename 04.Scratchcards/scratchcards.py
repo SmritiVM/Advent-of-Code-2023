@@ -39,7 +39,7 @@ def total_scratchcards(Cards):
     return sum([Cards[card_number][2] for card_number in Cards])
 
 
-with open ("4.Scratchcards\input.txt") as file:
+with open ("04.Scratchcards\input.txt") as file:
     Cards = parse_input(file)
     print(sum_of_wins(Cards))
     print(total_scratchcards(Cards))

@@ -38,5 +38,5 @@ def set_current_max(count, colour):
     current_max[colour] = max(current_max[colour], int(count))
 
 
-with open("2. Cube Conundrum\input.txt") as input:
+with open("02.Cube_Conundrum\input.txt") as input:
     print(*find_sums(input))

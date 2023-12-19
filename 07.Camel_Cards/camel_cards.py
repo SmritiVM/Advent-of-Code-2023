@@ -74,7 +74,7 @@ def compare_strength(hand1, hand2):
             return -1
     return 0
 
-path = "7.Camel_Cards\input.txt"
+path = "07.Camel_Cards\input.txt"
 CARDS = get_puzzle(path)
 
 # Part 1

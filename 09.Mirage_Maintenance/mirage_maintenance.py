@@ -35,7 +35,7 @@ def get_extrapolated_value(history):
         extrapolated_forward, extrapolated_backward = last_value + extrapolated_forward, first_value - extrapolated_backward
     return extrapolated_forward, extrapolated_backward
 
-path = "9.Mirage_Maintenance\input.txt"
+path = "09.Mirage_Maintenance\input.txt"
 HISTORY = get_puzzle(path)
 print(get_extrapolated_sum(HISTORY))
 

@@ -13,5 +13,5 @@ def sum_of_calibrations(file):
         sum += calibration_value(line)
     return sum
         
-with open("1\input1.txt") as file:
+with open("01.Trebuchet\input1.txt") as file:
     print(sum_of_calibrations(file))
