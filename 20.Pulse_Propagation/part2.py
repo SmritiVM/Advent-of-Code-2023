@@ -23,7 +23,7 @@ def get_minimum_presses_rx(MODULE):
     inputs = state['qn'][0] #qz,cq,jx,tt
     iteration = 0
     presses = []
-    while len(presses) < 4:
+    while inputs:
         iteration += 1
         push_button(state, MODULE, inputs, iteration, presses)
     return lcm(*presses)
@@ -52,7 +52,6 @@ def set_initial_state(MODULE):
 
 def push_button(state, MODULE, inputs, iteration, presses):
     # sequence = [] # (<module> <pulse type> <dest>)
-    high, low = 0, 1
     queue = deque(['broadcaster'])
     while queue:
         module = queue.popleft()
@@ -72,19 +71,18 @@ def push_button(state, MODULE, inputs, iteration, presses):
             else: pulse_type = 1
             state[module][1] = pulse_type #the pulse type sent out by the conjunction
             if module in inputs and pulse_type == 1: 
+                inputs.remove(module)
                 presses.append(iteration)
+                return
 
         for dest in destinations:
             # sequence.append((module, pulse_type, dest))
-            if pulse_type == 0: low += 1
-            else: high += 1
             if dest not in MODULE: continue
             dest_type = MODULE[dest][0]
             if dest_type == '%':
                 if not flip_the_flop(dest, pulse_type, state): continue
             queue.append(dest)
 
-    return high, low
 
 def flip_the_flop(dest, pulse_type, state):
     #If pulse is high, ignore
