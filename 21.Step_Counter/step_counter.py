@@ -30,17 +30,6 @@ def cover_adjacent(PLOT, queue):
 def get_inbound_coord(x, y):
     return x % rows, y % cols
     
-# goal = 26501365
-# def f(n):
-#     a0 = 3682
-#     a1 = 32768
-#     a2 = 90820
-
-#     b0 = a0
-#     b1 = a1-a0
-#     b2 = a2-a1
-#     return b0 + b1*n + (n*(n-1)//2)*(b2-b1)
-# print(f(goal//131))
 
 def get_garden_plots_covered_infinite(PLOT, START, steps):
     '''
