@@ -86,5 +86,5 @@ print(get_garden_plots_covered(PLOT, START, steps=64))
 Based on the logic and solution explained in this post:
 https://www.reddit.com/r/adventofcode/comments/18nevo3/comment/keaiiq7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 '''
-print(get_garden_plots_covered_infinite(PLOT, START, steps=26501365))
+# print(get_garden_plots_covered_infinite(PLOT, START, steps=26501365))
 
