@@ -4,7 +4,7 @@ def get_puzzle(path):
 
 def get_longest_path(TRAIL):
     rows, cols = len(TRAIL), len(TRAIL[0])
-    stack = [(0, 1, 0)]
+    stack = [(0, 1, 0)] # x, y, length
     visited = set()
     max_length = 0
     while stack:
